@@ -1,1 +1,110 @@
-#new file here
+class Book:
+    def __init__(self, book_id, title, author, stock=0):
+        self.__book_id = book_id
+        self.__title = title
+        self.__author = author
+        self.__stock = stock  # Book stock number
+
+  
+    def get_info(self):
+        return f"ID {self.__book_id}: {self.__title}, Author {self.__author}, Stock {self.__stock}"
+
+    
+    def get_stock(self):
+        return self.__stock
+
+    
+    def add_stock(self, num):
+        if num > 0:
+            self.__stock = self.__stock + num
+            print(f"Stock added {num}, current stock: {self.__stock}")
+        else:
+            print("Add number must be greater than 0!")
+
+    
+    def show_type(self):
+        return "Normal Paper Book"
+
+
+class Ebook(Book):
+    def __init__(self, book_id, title, author, fmt="PDF", stock=0):
+        super().__init__(book_id, title, author, stock)  # Call parent class init
+        self.__fmt = fmt  # Ebook format, unique attribute of subclass
+
+    
+    def show_type(self):
+        return f"E-book, Format {self.__fmt}"
+
+    
+    def get_fmt(self):
+        return self.__fmt
+
+
+
+
+class Library:
+    lib_name = "School Library"
+
+    def __init__(self):
+        self.__book_list = []  # Private list to store book objects
+
+    def add_book(self, book):
+        self.__book_list.append(book)
+        print("Book added successfully: " + book.get_info())
+
+    def check_all_books(self):
+        if len(self.__book_list) == 0:
+            print("No books in the library!")
+        else:
+            print("=====All Books in Library=====")
+            for b in self.__book_list:
+                print(b.get_info() + ", Type: " + b.show_type())
+
+    
+    @classmethod
+    def change_name(cls, new_name):
+        cls.lib_name = new_name
+        print("Library name changed to: " + cls.lib_name)
+
+    
+    @staticmethod
+    def check_bookid(book_id):
+        if str(book_id).isdigit():
+            return True, "ID format correct"
+        else:
+            return False, "ID must be a number!"
+
+
+
+from book import Book, Ebook
+from library import Library
+
+if __name__ == "__main__":
+    
+    my_lib = Library()
+    print("Initial library name: ", Library.lib_name)
+    Library.change_name("HKMU Mini Library")
+    print("Changed library name: ", Library.lib_name)
+    print("-"*30)
+
+    
+    print(Library.check_bookid(1001))
+    print(Library.check_bookid("book1002"))
+    print("-"*30)
+
+    
+    b1 = Book(1001, "Data Structures", "Teacher Li", 3)
+    e1 = Ebook(1002, "Python Beginner", "Teacher Wang", "EPUB", 5)
+
+    
+    my_lib.add_book(b1)
+    my_lib.add_book(e1)
+    print("-"*30)
+
+    
+    my_lib.check_all_books()
+    print("-"*30)
+
+    
+    b1.add_stock(2)
+    e1.add_stock(4)
